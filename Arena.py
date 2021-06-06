@@ -27,7 +27,7 @@ class Arena():
         self.game = game
         self.display = display
 
-    def playGame(self, verbose=False):
+    def playGame(self, verbose=False, viz_export=None):
         """
         Executes one episode of a game.
 
@@ -38,6 +38,7 @@ class Arena():
                 draw result returned from the game that is neither 1, -1, nor 0.
         """
         players = [self.player2, None, self.player1]
+        boardStates = []
         curPlayer = 1
         board = self.game.getInitBoard()
         it = 0

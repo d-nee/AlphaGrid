@@ -1,5 +1,4 @@
 import logging
-import sys
 import coloredlogs
 
 from Coach import Coach
@@ -23,7 +22,7 @@ args = dotdict({
 
     'checkpoint': './temp/',
     'load_model': False,
-    'load_folder_file': ('/dev/models/8x100x50','best.pth.tar'),
+    'load_folder_file': ('./temp','best.pth.tar'),
     'numItersForTrainExamplesHistory': 20,
 
 })

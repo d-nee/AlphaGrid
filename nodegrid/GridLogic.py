@@ -64,20 +64,34 @@ class Board():
         """Returns all the legal moves for the given color.
         (1 for white, -1 for black)
         """
-        ul = self[1][-1][-1] == color
-        dr = self[1][0][0] == color
+        # ul = self[1][-1][-1] == color
+        # dr = self[1][0][0] == color
+        # moves = []
+        # for i in range(self.n):
+        #     for j in range(self.n):
+        #         if self[1][i][j] == color:
+        #             base = 4 * (self.n * i + j)
+        #             if i > 0 and ul and self.move_is_useful(i, j, 0):
+        #                 moves.append(base)
+        #             if j > 0 and ul and self.move_is_useful(i, j, 1):
+        #                 moves.append(base + 1)
+        #             if i < self.n - 1 and dr and self.move_is_useful(i, j, 2):
+        #                 moves.append(base + 2)
+        #             if j < self.n - 1 and dr and self.move_is_useful(i, j, 3):
+        #                 moves.append(base + 3)
+
         moves = []
         for i in range(self.n):
             for j in range(self.n):
                 if self[1][i][j] == color:
                     base = 4 * (self.n * i + j)
-                    if i > 0 and ul and self.move_is_useful(i, j, 0):
+                    if i > 0 and self.move_is_useful(i, j, 0):
                         moves.append(base)
-                    if j > 0 and ul and self.move_is_useful(i, j, 1):
+                    if j > 0 and self.move_is_useful(i, j, 1):
                         moves.append(base + 1)
-                    if i < self.n - 1 and dr and self.move_is_useful(i, j, 2):
+                    if i < self.n - 1 and self.move_is_useful(i, j, 2):
                         moves.append(base + 2)
-                    if j < self.n - 1 and dr and self.move_is_useful(i, j, 3):
+                    if j < self.n - 1 and self.move_is_useful(i, j, 3):
                         moves.append(base + 3)
         return moves
 

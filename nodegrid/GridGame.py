@@ -52,7 +52,7 @@ class GridGame(Game):
             return 1
         if board[1][0][0] == -player and board[1][-1][-1] == -player:
             return -1
-        if board[2][0][0] >= 25:
+        if board[2][0][0] >= 200:
             b = Board(self.n)
             b.squares = np.copy(board)
             return b.timeout_winner(player)

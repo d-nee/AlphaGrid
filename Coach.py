@@ -1,5 +1,4 @@
 import logging
-from nodegrid.GridGame import GridGame
 import os
 import sys
 from collections import deque
@@ -55,6 +54,7 @@ class Coach():
             episodeStep += 1
             canonicalBoard = self.game.getCanonicalForm(board, self.curPlayer)
             temp = int(episodeStep < self.args.tempThreshold)
+
             pi = self.mcts.getActionProb(canonicalBoard, temp=temp)
             sym = self.game.getSymmetries(canonicalBoard, pi)
             for b, p in sym:
@@ -62,6 +62,7 @@ class Coach():
 
             action = np.random.choice(len(pi), p=pi)
             board, self.curPlayer = self.game.getNextState(board, self.curPlayer, action)
+
             r = self.game.getGameEnded(board, self.curPlayer)
 
             if r != 0:

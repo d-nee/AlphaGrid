@@ -44,13 +44,15 @@ class GridGame(Game):
             valids[x] = 1
         return np.array(valids)
 
-    def getGameEnded(self, board, player):
+    def getGameEnded(self, board, player, turns):
         # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
         # player = 1
         if board[1][0][0] == player and board[1][-1][-1] == player:
             return 1
         if board[1][0][0] == -player and board[1][-1][-1] == -player:
             return -1
+        if turns > 200:
+            return board[1][-1][-1]
         return 0
 
     def getCanonicalForm(self, board, player):

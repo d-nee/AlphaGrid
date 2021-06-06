@@ -7,7 +7,6 @@ for ownership.
 z is owner, x is the column, y is the row.
 '''
 class Board():
-
     def __init__(self, n):
         "Set up initial board configuration."
         INIT_PLAYER_UNITS = 15
@@ -36,36 +35,8 @@ class Board():
     def __getitem__(self, index):
         return self.squares[index]
 
-    def get_legal_moves(self, color):
-        """Returns all the legal moves for the given color.
-        (1 for white, -1 for black
-        """
-        moves = []
-        for i in range(self.n):
-            for j in range(self.n):
-                if self[1][i][j] == color:
-                    base = 4 * (self.n * i + j)
-                    if i > 0:
-                        moves.append(base)
-                    if j > 0:
-                        moves.append(base + 1)
-                    if i < self.n - 1:
-                        moves.append(base + 2)
-                    if j < self.n - 1:
-                        moves.append(base + 3)
-        return moves
-
-    def is_eliminated(self, color):
-        if color == 1:
-            return self[1][0][0] != color
-        else:
-            return self[1][self.n - 1][self.n - 1] != color
-
-    def execute_move(self, move, color):
-        """Perform the given move on the board; flips pieces as necessary.
-        color gives the color pf the piece to play (1=p1,-1=p2)
-        """
-        r, c, direction = move
+    @staticmethod
+    def get_tg_move(r, c, direction):
         if direction == 0:
             r_tg = r - 1
             c_tg = c
@@ -78,6 +49,41 @@ class Board():
         elif direction == 3:
             r_tg = r
             c_tg = c + 1
+        return r_tg, c_tg
+    
+    def move_is_useful(self, r, c, d):
+        r_tg, c_tg = Board.get_tg_move(r, c, d)
+        if self[1][r][c] != self[1][r_tg][c_tg]:
+            return True
+        return self[1][r_tg][c_tg] != 50
+
+    def get_legal_moves(self, color):
+        """Returns all the legal moves for the given color.
+        (1 for white, -1 for black
+        """
+        moves = []
+        for i in range(self.n):
+            for j in range(self.n):
+                if self[1][i][j] == color:
+                    base = 4 * (self.n * i + j)
+                    if i > 0 and self.move_is_useful(i, j, 0):
+                        moves.append(base)
+                    if j > 0 and self.move_is_useful(i, j, 1):
+                        moves.append(base + 1)
+                    if i < self.n - 1 and self.move_is_useful(i, j, 2):
+                        moves.append(base + 2)
+                    if j < self.n - 1 and self.move_is_useful(i, j, 3):
+                        moves.append(base + 3)
+        return moves
+
+
+    def execute_move(self, move, color):
+        """Perform the given move on the board; flips pieces as necessary.
+        color gives the color pf the piece to play (1=p1,-1=p2)
+        """
+        r, c, direction = move
+
+        r_tg, c_tg = Board.get_tg_move(r, c, direction)
         
         if self[1][r_tg][c_tg] == color:
             total = self[0][r][c] + self[0][r_tg][c_tg] 

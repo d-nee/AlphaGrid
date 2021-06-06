@@ -1,6 +1,6 @@
 import logging
 import math
-import sys
+
 import numpy as np
 
 EPS = 1e-8
@@ -29,13 +29,12 @@ class MCTS():
         """
         This function performs numMCTSSims simulations of MCTS starting from
         canonicalBoard.
-
         Returns:
             probs: a policy vector where the probability of the ith action is
                    proportional to Nsa[(s,a)]**(1./temp)
         """
         for i in range(self.args.numMCTSSims):
-            self.search(canonicalBoard,0)
+            self.search(canonicalBoard)
 
         s = self.game.stringRepresentation(canonicalBoard)
 
@@ -53,29 +52,26 @@ class MCTS():
         probs = [x / counts_sum for x in counts]
         return probs
 
-    def search(self, canonicalBoard,turns):
+    def search(self, canonicalBoard):
         """
         This function performs one iteration of MCTS. It is recursively called
         till a leaf node is found. The action chosen at each node is one that
         has the maximum upper confidence bound as in the paper.
-
         Once a leaf node is found, the neural network is called to return an
         initial policy P and a value v for the state. This value is propagated
         up the search path. In case the leaf node is a terminal state, the
         outcome is propagated up the search path. The values of Ns, Nsa, Qsa are
         updated.
-
         NOTE: the return values are the negative of the value of the current
         state. This is done since v is in [-1,1] and if v is the value of a
         state for the current player, then its value is -v for the other player.
-
         Returns:
             v: the negative of the value of the current canonicalBoard
         """
         s = self.game.stringRepresentation(canonicalBoard)
 
         if s not in self.Es:
-            self.Es[s] = self.game.getGameEnded(canonicalBoard, 1,turns)
+            self.Es[s] = self.game.getGameEnded(canonicalBoard, 1)
         if self.Es[s] != 0:
             # terminal node
             return -self.Es[s]
@@ -122,7 +118,7 @@ class MCTS():
         next_s, next_player = self.game.getNextState(canonicalBoard, 1, a)
         next_s = self.game.getCanonicalForm(next_s, next_player)
 
-        v = self.search(next_s,turns+1)
+        v = self.search(next_s)
 
         if (s, a) in self.Qsa:
             self.Qsa[(s, a)] = (self.Nsa[(s, a)] * self.Qsa[(s, a)] + v) / (self.Nsa[(s, a)] + 1)

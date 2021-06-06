@@ -18,12 +18,15 @@ class Board():
         self.squares = []
         self.squares.append([])
         self.squares.append([])
+        self.squares.append([])
         for i in range(self.n):
             self.squares[0].append([])
             self.squares[1].append([])
+            self.squares[2].append([])
             for j in range(self.n):
                 self.squares[0][i].append(INIT_NEUTRAL)
                 self.squares[1][i].append(0)
+                self.squares[2][i].append(1)
 
         # Set up the initial 2 pieces.
         self.squares[0][0][0] = INIT_PLAYER_UNITS
@@ -55,24 +58,26 @@ class Board():
         r_tg, c_tg = Board.get_tg_move(r, c, d)
         if self[1][r][c] != self[1][r_tg][c_tg]:
             return True
-        return self[1][r_tg][c_tg] != 50
+        return self[0][r_tg][c_tg] != 50
 
     def get_legal_moves(self, color):
         """Returns all the legal moves for the given color.
-        (1 for white, -1 for black
+        (1 for white, -1 for black)
         """
+        ul = self[1][-1][-1] == color
+        dr = self[1][0][0] == color
         moves = []
         for i in range(self.n):
             for j in range(self.n):
                 if self[1][i][j] == color:
                     base = 4 * (self.n * i + j)
-                    if i > 0 and self.move_is_useful(i, j, 0):
+                    if i > 0 and ul and self.move_is_useful(i, j, 0):
                         moves.append(base)
-                    if j > 0 and self.move_is_useful(i, j, 1):
+                    if j > 0 and ul and self.move_is_useful(i, j, 1):
                         moves.append(base + 1)
-                    if i < self.n - 1 and self.move_is_useful(i, j, 2):
+                    if i < self.n - 1 and dr and self.move_is_useful(i, j, 2):
                         moves.append(base + 2)
-                    if j < self.n - 1 and self.move_is_useful(i, j, 3):
+                    if j < self.n - 1 and dr and self.move_is_useful(i, j, 3):
                         moves.append(base + 3)
         return moves
 
@@ -107,8 +112,25 @@ class Board():
 
         for i in range(self.n):
             for j in range(self.n):
-                if self[1][i][j] != 0 and self[0][i][j] <= self.MAX_UNITS:
+                if self[1][i][j] != 0 and self[0][i][j] < self.MAX_UNITS:
                     self[0][i][j] += 1
+                self[2][i][j] += 1
+
+    def timeout_winner(self, color):
+        sum_p1, sum_p2 = 0, 0
+        p1_s, p2_s = 0, 0
+        for i in range(self.n):
+            for j in range(self.n):
+                if self[1][i][j] == color:
+                    sum_p1 += self[0][i][j]
+                    p1_s += 1
+                elif self[1][i][j] == -color:
+                    sum_p2 += self[0][i][j]
+                    p2_s += 1
+        return 1 if sum_p1 >= sum_p2 else -1
+                
+
+
         
 
                 

@@ -1,4 +1,5 @@
 import logging
+from nodegrid.GridGame import GridGame
 import os
 import sys
 from collections import deque

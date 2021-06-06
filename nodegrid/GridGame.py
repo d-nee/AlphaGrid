@@ -6,6 +6,7 @@ from .GridLogic import Board
 import numpy as np
 
 class GridGame(Game):
+
     def __init__(self, n):
         assert(n >= 2)
         self.n = n
@@ -44,15 +45,17 @@ class GridGame(Game):
             valids[x] = 1
         return np.array(valids)
 
-    def getGameEnded(self, board, player, turns):
+    def getGameEnded(self, board, player):
         # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
         # player = 1
         if board[1][0][0] == player and board[1][-1][-1] == player:
             return 1
         if board[1][0][0] == -player and board[1][-1][-1] == -player:
             return -1
-        if turns > 200:
-            return board[1][-1][-1]
+        if board[2][0][0] >= 25:
+            b = Board(self.n)
+            b.squares = np.copy(board)
+            return b.timeout_winner(player)
         return 0
 
     def getCanonicalForm(self, board, player):
@@ -65,6 +68,7 @@ class GridGame(Game):
         # mirror, rotational?? really hard rotations
         # hard because the rotation of actions is tough
         assert(len(pi) == self.n*self.n*4)
+        # reshape 1-d pi vector into n \times n \times 4 array 
         pi_board = np.reshape(pi, (self.n, self.n, 4))
         l = []
         
@@ -106,3 +110,5 @@ class GridGame(Game):
             print("|")
 
         print("---------------------------------------------")
+
+

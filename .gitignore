@@ -1,4 +1,5 @@
 **/*.pyc
-./temp_2s_2d/*
-./temp_8s_2d/*
-./temp_full_2s_4d/*
+temp_2s_2d/*
+temp_8s_2d/*
+temp_full_2s_4d/*
+pitlog.txt

@@ -141,7 +141,7 @@ class Board():
                 elif self[1][i][j] == -color:
                     sum_p2 += self[0][i][j]
                     p2_s += 1
-        return 1 if sum_p1 >= sum_p2 else -1
+        return 1 if p1_s >= p2_s else -1
                 
 
 

@@ -72,17 +72,22 @@ class GridGame(Game):
         pi_board = np.reshape(pi, (self.n, self.n, 4))
         l = []
         
-        for i in range(0, 4):
-            for j in [True, False]:
-                newB = np.rot90(board, i, (1, 2))
-                newPi = np.roll(np.rot90(pi_board, i, (0, 1)), i, 2)
-                if j:
-                    newB = np.flip(newB, 2)
-                    newPi = np.flip(newPi, 1)
-                    temp = np.copy(newPi[:,:,1])
-                    newPi[:,:,1] = newPi[:,:,3]
-                    newPi[:,:,3] = temp
-                l += [(newB, list(newPi.ravel()))]
+        # for i in range(0, 4):
+        #     for j in [True, False]:
+        #         newB = np.rot90(board, i, (1, 2))
+        #         newPi = np.roll(np.rot90(pi_board, i, (0, 1)), i, 2)
+        #         if j:
+        #             newB = np.flip(newB, 2)
+        #             newPi = np.flip(newPi, 1)
+        #             temp = np.copy(newPi[:,:,1])
+        #             newPi[:,:,1] = newPi[:,:,3]
+        #             newPi[:,:,3] = temp
+        #         l += [(newB, list(newPi.ravel()))]
+
+        for i in [0, 2]:
+            newB = np.rot90(board, i, (1, 2))
+            newPi = np.roll(np.rot90(pi_board, i, (0, 1)), i, 2)
+            l += [(newB, list(newPi.ravel()))]
         return l
 
 
@@ -97,18 +102,26 @@ class GridGame(Game):
 
     @staticmethod
     def display(board):
-        n = board[0].shape[0]
-        print("   ", end="")
-        for y in range(n):
-            print(y, end="       ")
-        print("")
-        print("---------------------------------------------")
-        for y in range(n):
-            print(y, "|", end="")    # print the row #
-            for x in range(n):
-                print((board[0][y][x] , board[1][y][x]), end=" ")
-            print("|")
-
-        print("---------------------------------------------")
+        with open("pitlog.txt", "a") as file:
+            n = board[0].shape[0]
+            print("   ", end="")
+            file.write("   ")
+            for y in range(n):
+                print(y, end="       ")
+                file.write(f"{y}       ")
+            print("")
+            file.write("\n")
+            print("---------------------------------------------")
+            file.write("---------------------------------------------\n")
+            for y in range(n):
+                print(y, "|", end="")    # print the row #
+                file.write(f"{y}|")
+                for x in range(n):
+                    print((board[0][y][x] , board[1][y][x]), end=" ")
+                    file.write(f"{(board[0][y][x] , board[1][y][x])} ")
+                print("|")
+                file.write("|\n")
+            print("---------------------------------------------")
+            file.write("---------------------------------------------\n")
 
 

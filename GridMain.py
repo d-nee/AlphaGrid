@@ -16,15 +16,13 @@ args = dotdict({
     'tempThreshold': 5,        #
     'updateThreshold': 0.6,     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
     'maxlenOfQueue': 200000,    # Number of game examples to train the neural networks.
-    'numMCTSSims': 25,          # Number of games moves for MCTS to simulate.
+    'numMCTSSims': 50,          # Number of games moves for MCTS to simulate.
     'arenaCompare': 40,         # Number of games to play during arena play to determine if new net will be accepted.
     'cpuct': 1,
-
-    'checkpoint': './temp/',
+    'checkpoint': './temp_full_2s_4d',
     'load_model': False,
-    'load_folder_file': ('./temp','best.pth.tar'),
-    'numItersForTrainExamplesHistory': 20,
-
+    'load_folder_file': ('./temp','checkpoint_2.pth.tar'),
+    'numItersForTrainExamplesHistory': 10,
 })
 
 
@@ -36,7 +34,7 @@ def main():
     nnet = nn(g)
 
     if args.load_model:
-        log.info('Loading checkpoint "%s/%s"...', args.load_folder_file)
+        log.info('Loading checkpoint "%s/%s"...', args.load_folder_file[0], args.load_folder_file[1])
         nnet.load_checkpoint(args.load_folder_file[0], args.load_folder_file[1])
     else:
         log.warning('Not loading a checkpoint!')

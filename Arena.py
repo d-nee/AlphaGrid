@@ -27,7 +27,7 @@ class Arena():
         self.game = game
         self.display = display
 
-    def playGame(self, verbose=False, viz_export=None):
+    def playGame(self, verbose=False, visualizer=None):
         """
         Executes one episode of a game.
 
@@ -43,6 +43,9 @@ class Arena():
         board = self.game.getInitBoard()
         it = 0
         while self.game.getGameEnded(board, curPlayer) == 0:
+            if visualizer and it % 2 == 1:
+                visualizer.addBoard(board)
+
             it += 1
             if verbose:
                 assert self.display
@@ -61,9 +64,11 @@ class Arena():
             assert self.display
             print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, 1)))
             self.display(board)
+        if visualizer:
+            visualizer.save()
         return curPlayer * self.game.getGameEnded(board, curPlayer)
 
-    def playGames(self, num, verbose=False):
+    def playGames(self, num, verbose=False, visualizer=None, viz_args=None):
         """
         Plays num games in which player1 starts num/2 games and player2 starts
         num/2 games.
@@ -79,7 +84,7 @@ class Arena():
         twoWon = 0
         draws = 0
         for _ in tqdm(range(num), desc="Arena.playGames (1)"):
-            gameResult = self.playGame(verbose=verbose)
+            gameResult = self.playGame(verbose=verbose, visualizer=visualizer(**viz_args))
             if gameResult == 1:
                 oneWon += 1
             elif gameResult == -1:
@@ -90,7 +95,7 @@ class Arena():
         self.player1, self.player2 = self.player2, self.player1
 
         for _ in tqdm(range(num), desc="Arena.playGames (2)"):
-            gameResult = self.playGame(verbose=verbose)
+            gameResult = self.playGame(verbose=verbose, visualizer=visualizer(**viz_args))
             if gameResult == -1:
                 oneWon += 1
             elif gameResult == 1:

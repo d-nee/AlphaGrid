@@ -1,3 +1,4 @@
+from Visualizer import SaveToFileVisualizer
 import Arena
 from MCTS import MCTS
 from nodegrid.GridGame import GridGame
@@ -36,7 +37,7 @@ def randomplay(b):
 # nnet players
 n1 = NNet(g)
 n1.load_checkpoint('models_2s_4d','best.pth.tar')
-args1 = dotdict({'numMCTSSims': 100, 'cpuct':1.0})
+args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
 mcts1 = MCTS(g, n1, args1)
 n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 
@@ -48,7 +49,7 @@ if p2_is_not_nn:
     player2 = randomplay
 else:
     n2 = NNet(g)
-    n2.load_checkpoint('./temp_old_8_symmetry/', 'best.pth.tar')
+    n2.load_checkpoint('models_2s_4d','best.pth.tar')
     args2 = dotdict({'numMCTSSims': 100, 'cpuct': 1.0})
     mcts2 = MCTS(g, n2, args2)
     n2p = lambda x: np.argmax(mcts2.getActionProb(x, temp=0))
@@ -56,4 +57,4 @@ else:
 
 arena = Arena.Arena(n1p, player2, g, display=GridGame.display)
 
-print(arena.playGames(40, verbose=False))
+print(arena.playGames(40, verbose=False, visualizer=SaveToFileVisualizer, viz_args={'path': 'gameviz'}))

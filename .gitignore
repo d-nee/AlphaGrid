@@ -5,3 +5,4 @@ temp_full_2s_4d/*
 models_2s_4d/*.pth.tar.examples
 models_2s_4d/temp.pth.tar
 pitlog.txt
+*.png

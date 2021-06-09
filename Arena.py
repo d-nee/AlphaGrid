@@ -42,6 +42,7 @@ class Arena():
         curPlayer = 1
         board = self.game.getInitBoard()
         it = 0
+        visualizer.addBoard(board)
         while self.game.getGameEnded(board, curPlayer) == 0:
             if visualizer and it % 2 == 1:
                 visualizer.addBoard(board)
